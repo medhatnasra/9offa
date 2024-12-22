@@ -1,7 +1,7 @@
 const userModel = require("../models/userModel");
 
 const GetAllUsers = async (req, res) => {
-  const allusers = await userModel.find();
+  const allusers = await userModel.find().select("-password");
 
   return res.status(200).send(allusers);
 };

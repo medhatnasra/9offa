@@ -20,6 +20,13 @@ const prodSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  image: {
+    type: Object,
+    default: {
+      url: "",
+      publicId: null,
+    },
+  },
   date: {
     type: Date,
     default: Date.now,

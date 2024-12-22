@@ -12,6 +12,7 @@ const {
   verifyTokenAndAdmin,
   verifyBothVandA,
 } = require("../middlewares/verifyToken");
+const photoUpload = require("../middlewares/uploadPhotos");
 
 const router = express.Router();
 
@@ -19,6 +20,8 @@ router.post(
   "/api/product/",
   verifyToken,
   verifyBothVandA,
+  photoUpload.single("image"),
+
   createProdController
 );
 router.get("/api/product/", verifyToken, getAllProducts);

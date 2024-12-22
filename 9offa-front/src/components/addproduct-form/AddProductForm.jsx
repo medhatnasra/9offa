@@ -1,15 +1,10 @@
-import React, { useRef } from "react";
+import React from "react";
 
-const AddProduct = () => {
-  const name = useRef("");
-  const category = useRef("");
-  const description = useRef("");
-  const price = useRef("");
-
+export const AddProductForm = ({ handlechange, onSubmit }) => {
   return (
     <>
       <h2 className="center-text">Add Product</h2>
-      <form className="p-3">
+      <form className="p-3" enctype="multipart/form-data">
         <div className="form-group mb-4">
           <label for="exampleFormControlInput1">Product Name</label>
           <input
@@ -17,12 +12,19 @@ const AddProduct = () => {
             class="form-control"
             id="exampleFormControlInput1"
             placeholder="Product Name"
+            name="name"
+            onChange={handlechange}
           />
         </div>
 
         <div className="form-group mb-4">
           <label for="exampleFormControlSelect1">Category</label>
-          <select class="form-control" id="exampleFormControlSelect1">
+          <select
+            class="form-control"
+            id="exampleFormControlSelect1"
+            name="category"
+            onChange={handlechange}
+          >
             <option>Accessories</option>
             <option>Kids & Baby Fashion</option>
             <option>Women's Clothing</option>
@@ -36,6 +38,8 @@ const AddProduct = () => {
             className="form-control"
             id="exampleFormControlTextarea1"
             rows="3"
+            name="description"
+            onChange={handlechange}
           ></textarea>
         </div>
         <div className="form-group mb-4">
@@ -45,35 +49,28 @@ const AddProduct = () => {
             className="form-control"
             id="exampleFormControlInput1"
             placeholder="Price"
+            name="price"
+            onChange={handlechange}
           />
         </div>
-        <button type="submit" className="btn btn-primary">
-          Add Product
-        </button>
-      </form>
-      <form
-        action="http://localhost:4000/upload"
-        method="POST"
-        enctype="multipart/form-data"
-      >
-        <div class="mb-3">
-          <div class="form-file custom-file">
+
+        <div className="mb-3">
+          <div className="form-file custom-file">
             <input
               class="form-control"
               type="file"
               id="formFile"
               name="image"
               multiple
+              onChange={handlechange}
             />
-            <label class="form-file-label" for="image" />
+            <label className="form-file-label" htmlFor="image" />
           </div>
         </div>
-        <button type="submit" class="btn btn-success">
-          Upload
+        <button type="submit" className="btn btn-primary" onClick={onSubmit}>
+          Add Product
         </button>
       </form>
     </>
   );
 };
-
-export default AddProduct;

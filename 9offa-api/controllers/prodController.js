@@ -1,5 +1,11 @@
 const Joi = require("joi");
 const prodModel = require("../models/prodModel");
+const { storage } = require("../storage/storage");
+const multer = require("multer");
+const upload = multer({ storage });
+const { cloudinaryUpload, cloudinaryDelete } = require("../storage/storage");
+const fs = require("fs");
+const path = require("path");
 
 const createProdController = async (req, res) => {
   try {
@@ -9,11 +15,17 @@ const createProdController = async (req, res) => {
       price: Joi.number().required(),
       category: Joi.string().required(),
     });
-    const { error } = await schema.validate(req.body);
-
+    const { error } = schema.validate(req.body);
     if (error) {
       return res.status(400).json({ message: error.message });
     }
+
+    if (!req.file) {
+      res.status(400).json({ message: "You need An Image" }); // Validate presence of an image file
+    }
+    const imagepath = path.join(__dirname, `../images/${req.file.filename}`); // Define image path
+
+    const result = await cloudinaryUpload(imagepath); // Upload image to Cloudinary
 
     const product = new prodModel({
       name: req.body.name,
@@ -21,10 +33,15 @@ const createProdController = async (req, res) => {
       price: req.body.price,
       user: req.user.user.id,
       category: req.body.category,
+      image: {
+        url: result.secure_url,
+        publicId: result.public_id,
+      },
     });
 
     product.save();
-    res.status(201).json({ message: product });
+    res.status(201).json({ message: "Added Successffully..", product });
+    fs.unlinkSync(imagepath); // Remove local file after upload
   } catch (err) {
     console.log(err);
     res.status(500).send("something went wrong");
